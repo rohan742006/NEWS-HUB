@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: url('cloud.jpg') no-repeat center center fixed;
+    background-size: cover;
+    animation: moveClouds 100s linear infinite;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    /* soft white overlay */
+    pointer-events: none;
+}
+
+header {
+    background: #448dbb;
+    color: white;
+    padding: 20px;
+}
+
+h1 {
+    margin: 0;
+}
+
+section {
+    margin: 30px auto;
+    width: 80%;
+    max-width: 700px;
+    background:#ffffffcc;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #21867a;
+}
+
+.news-item .share-buttons a {
+    background: #264653;
+    color: white;
+    padding: 6px 12px;
+    margin-right: 8px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.news-item .share-buttons a:hover {
+    transform: scale(1.05);
+}
+
+footer {
+    background: #4ca8af;
+    color: white;
+    padding: 10px;
+    margin-top: 30px;
+}
+
+.news-item:hover {
+    transform: translateY(-3px);
+    transition: 0.3s;
+}
+
+@keyframes moveClouds {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 0; }
+}
+
+.welcome-msg {
+    font-size: 18px;
+    color: rgb(11, 11, 11);
+    margin-top: 10px;
+    
+}
+
