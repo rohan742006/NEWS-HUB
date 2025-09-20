@@ -6,8 +6,8 @@ function loadNews(page = 1) {
     container.innerHTML = "Loading news…";
 
     const apiKey = "e27725f896464ba8a38d64265c2c8e65"; 
-    const url = `https://newsapi.org/v2/everything?q=good%20news&language=en&sortBy=publishedAt&pageSize=${pageSize}&page=${page}&apiKey=${apiKey}`;
-
+    const proxy = "https://cors-anywhere.herokuapp.com/";
+const url = `${proxy}https://newsapi.org/v2/everything?q=${currentQuery}&language=en&sortBy=publishedAt&pageSize=10&page=${currentPage}&apiKey=${apiKey}`;
     fetch(url)
         .then(res => res.json())
         .then(data => {
