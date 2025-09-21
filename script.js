@@ -1,20 +1,20 @@
-let currentPage = 1; // Track current page
-const pageSize = 10; // Articles per page
+let currentPage = 1; // start at page 1
+const pageSize = 10; // articles per page
+const apiKey = "4170b022847a3c5538594a469a8a9def"; // replace with your GNews API key
 
 function loadNews(page = 1) {
     const container = document.getElementById("newsContainer");
     container.innerHTML = "Loading news…";
 
-    const apiKey = "e27725f896464ba8a38d64265c2c8e65"; 
-    const proxy = "https://cors-anywhere.herokuapp.com/";
-const url = `${proxy}https://newsapi.org/v2/everything?q=${currentQuery}&language=en&sortBy=publishedAt&pageSize=10&page=${currentPage}&apiKey=${apiKey}`;
+    const url = `https://gnews.io/api/v4/search?q=good news&lang=en&max=${pageSize}&page=${page}&token=${apiKey}`;
+
     fetch(url)
         .then(res => res.json())
         .then(data => {
             container.innerHTML = "";
 
             if (!data.articles || data.articles.length === 0) {
-                container.innerHTML = "No more news available!";
+                container.innerHTML = "No news found at the moment!";
                 return;
             }
 
@@ -22,12 +22,15 @@ const url = `${proxy}https://newsapi.org/v2/everything?q=${currentQuery}&languag
                 const div = document.createElement("div");
                 div.classList.add("news-item");
 
+                // Fallback image if article.image is missing
+                const imageUrl = article.image ? article.image : "placeholder.jpg";
+
                 const description = article.description
                     ? article.description.substring(0, 150) + "..."
                     : "";
 
                 div.innerHTML = `
-                    ${article.urlToImage ? `<img src="${article.urlToImage}" alt="News Image" style="width:100%; border-radius:8px; margin-bottom:10px;"/>` : ""}
+                    <img src="${imageUrl}" alt="News Image" style="width:100%; border-radius:8px; margin-bottom:10px;">
                     <h3>${article.title}</h3>
                     <p>${description}</p>
                     <a href="${article.url}" target="_blank">Read More</a>
@@ -38,39 +41,34 @@ const url = `${proxy}https://newsapi.org/v2/everything?q=${currentQuery}&languag
                     </div>
                     <small>Source: ${article.source.name} | Published: ${new Date(article.publishedAt).toLocaleString()}</small>
                 `;
+
                 container.appendChild(div);
             });
 
             // Pagination buttons
-            const pagination = document.createElement("div");
-            pagination.style.marginTop = "20px";
+            const paginationDiv = document.createElement("div");
+            paginationDiv.style.marginTop = "20px";
 
-            const prevButton = document.createElement("button");
-            prevButton.innerText = "Previous";
-            prevButton.disabled = page === 1;
-            prevButton.style.marginRight = "10px";
-            prevButton.addEventListener("click", () => {
-                currentPage--;
-                loadNews(currentPage);
-            });
+            if (page > 1) {
+                const prevBtn = document.createElement("button");
+                prevBtn.innerText = "◀️ Previous Page";
+                prevBtn.style.marginRight = "10px";
+                prevBtn.onclick = () => {
+                    currentPage--;
+                    loadNews(currentPage);
+                };
+                paginationDiv.appendChild(prevBtn);
+            }
 
-            const nextButton = document.createElement("button");
-            nextButton.innerText = "Next";
-            nextButton.addEventListener("click", () => {
+            const nextBtn = document.createElement("button");
+            nextBtn.innerText = "Next Page ▶️";
+            nextBtn.onclick = () => {
                 currentPage++;
                 loadNews(currentPage);
-            });
+            };
+            paginationDiv.appendChild(nextBtn);
 
-            pagination.appendChild(prevButton);
-            pagination.appendChild(nextButton);
-            container.appendChild(pagination);
-
-            // Last updated
-            const lastUpdated = document.createElement("p");
-            lastUpdated.style.fontSize = "12px";
-            lastUpdated.style.marginTop = "10px";
-            lastUpdated.innerText = `Last updated: ${new Date().toLocaleTimeString()}`;
-            container.appendChild(lastUpdated);
+            container.appendChild(paginationDiv);
         })
         .catch(err => {
             console.error(err);
@@ -78,15 +76,14 @@ const url = `${proxy}https://newsapi.org/v2/everything?q=${currentQuery}&languag
         });
 }
 
-// Initialize
-document.addEventListener("DOMContentLoaded", () => {
+// Load news automatically on page load
+window.onload = () => {
+    currentPage = 1;
     loadNews(currentPage);
+};
 
-    // Change button text
-    const refreshButton = document.getElementById("getNews");
-    refreshButton.innerText = "Go to Next Page";
-    refreshButton.addEventListener("click", () => {
-        currentPage++;
-        loadNews(currentPage);
-    });
-});
+// Optional: if you want a button to reload news manually
+// document.getElementById("getNews").addEventListener("click", () => {
+//     currentPage = 1;
+//     loadNews(currentPage);
+// });
